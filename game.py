@@ -1,73 +1,96 @@
-"""
+'''
 Adventure Game
 Author: Swornim Lamsal
-Version: 1.1
+Version: 1.0
 Description:
-This is a text-based adventure game where the player makes choices
-to navigate through a mysterious forest.
-"""
+This is a text-based adventure game where the player explores a mysterious forest,
+collects items, and makes choices that affect their journey.
+'''
 
-
-# Inventory list to store items collected by the player
+# Our player's backpack - starts empty but will fill up as they explore
 inventory = []
 
-# Function to welcome the player
-def welcome_player():
+def welcome_players():
+    """Greets the player and gets their name for a personalized adventure"""
+    # Friendly welcome messages to set the mood
     print("Welcome to the Adventure Game!")
-    print("Your journey begins here...")
-    name = input("What is your name, adventurer? ")
-    print(f"Welcome, {name}! Your journey begins now.")
-    return name
-
-# Function to describe the starting area
-def describe_area():
-    print("""
-You find yourself in a dark forest...
-The sound of rustling leaves fills the air.
-A faint path lies ahead, leading deeper into the unknown...
-""")
-
-# Function to add an item to the inventory and print a message
-def add_to_inventory(item):
-    if item not in inventory:
-        inventory.append(item)
-        print(f"You picked up a {item}!")
-    else:
-        print(f"You already have the {item}.")
-
-# Main function to run the game
-def main():
-    # Welcome the player and store their name
-    player_name = welcome_player()
+    print('Your journey begins here... ')
     
-    # Describe the area the player finds themselves in
-    describe_area()
+    # Ask for the player's name - we'll use this throughout the game
+    player_name = input("What is your name, adventurer? ")
+    
+    # Greet them personally using two different methods (showing programming options)
+    print("Welcome, " + player_name + "! Your journey begins now.")  # Traditional concatenation
+    print(f"Welcome, {player_name}! Your journey begins now.")      # Modern f-string (cleaner)
+    
+    return player_name  # Send back the name so we can use it later
 
-    # Start the game loop
-    while True:
-        # Present the player with options
-        print("\nYou see two paths ahead:")
-        print("    1. Take the left path into the dark woods.")
-        print("    2. Take the right path toward the mountain pass.")
-        print("    3. Stay where you are.")
-        print("    Type 'i' to view your inventory.")
+def directive_auto():
+    """Paints the scene of where the player starts their adventure"""
+    # Multi-line string creates a vivid starting location
+    starting_area = """
+You find yourself in a dark forest
+The sound of rustling leaves fills the air
+A faint path lies ahead, leading deeper into the
+unknown...
+"""
+    print(starting_area)  # Show this atmospheric description
 
-        choice = input("What will you do (1, 2, 3, or i): ").lower()
+def add_to_inventory(item):
+    """Handles adding found items to the player's collection"""
+    # Add the new item to our inventory list
+    inventory.append(item)
+    
+    # Let the player know they successfully picked something up
+    print(f"You picked up: {item}")
 
-        if choice == "1":
-            print(f"{player_name}, you step into the dark woods...")
-            add_to_inventory("lantern")  # Add a lantern to the inventory
-        elif choice == "2":
-            print(f"{player_name}, you head toward the mountain pass...")
-            add_to_inventory("map")  # Add a map to the inventory
-        elif choice == "3":
-            print(f"{player_name}, you decide to stay where you are.")
-        elif choice == "i":
-            # Show the player's inventory
-            print(f"Inventory: {inventory}")
-        else:
-            print("Invalid choice. Please select 1, 2, 3, or i.")
+# ===== MAIN GAME FLOW =====
 
-# Run the game
-if __name__ == "__main__":
-    main()
+# Get the player's name and show welcome messages
+player_name = welcome_players()
+
+# Set the scene by describing the starting location
+directive_auto()
+
+# The core game loop - runs continuously until player chooses to quit
+while True:
+    # Present the player with their options at each turn
+    print("\nYou see two paths ahead:")
+    print("\t1. Take the left path into the dark woods.")
+    print("\t2. Take the right path toward the mountain pass.")
+    print("\t3. Check your inventory.")          # New feature - view collected items
+    print("\t4. Stay where you are.")           # Option to pause and observe
+    
+    # Get the player's choice (will be a string "1", "2", etc.)
+    decision = input("What will you do (1,2,3,4): ")
+
+    # Handle each possible choice
+    if decision == "1":
+        # Left path description and consequence
+        print(f"{player_name}, you step into the dark woods. The trees whisper as you walk deeper.")
+        add_to_inventory("tester")  # Find a "tester" item in the woods
+        
+    elif decision == "2":
+        # Right path description and consequence
+        print(f"{player_name}, you make your way towards the mountain pass, feeling the cold wind against your face.")
+        add_to_inventory("may")  # Find a "may" item on the mountain path
+        
+    elif decision == "3":
+        # Show everything the player has collected
+        print("Inventory contents:", inventory)
+        
+    elif decision == "4":
+        # Do nothing option - just environmental description
+        print("You stay still, listening to the distant sounds of the forest")
+        
+    else:
+        # Handle invalid inputs gracefully
+        print("Invalid choice. Please choose 1, 2, 3, or 4.")
+   
+    # After each action, check if they want to keep playing
+    play_again = input("Do you want to continue exploring? (yes or no): ").lower()
+    
+    # If they say anything other than "yes", end the game
+    if play_again != "yes":
+        print(f"Thanks for playing, {player_name}. See you next time.")
+        break  # Exit the game loop
