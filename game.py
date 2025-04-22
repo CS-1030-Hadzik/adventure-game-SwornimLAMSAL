@@ -3,13 +3,7 @@ Adventure Game – conditionals
 Author: Swornim Lamsal
 Version: 1.1
 
-This version includes:
-- Health system
-- Win and lose conditions
-- Item-based area unlocking
-- Inventory tracking
-- Modular function design
-'''
+
 
 # Player class
 class Player:
