@@ -1,96 +1,154 @@
 '''
+DOCSTRING
 Adventure Game
 Author: Swornim Lamsal
 Version: 1.0
 Description:
-This is a text-based adventure game where the player explores a mysterious forest,
-collects items, and makes choices that affect their journey.
+This is a text-based adventure game where the player makes choices
+to navigate through a mysterious forest.
 '''
 
-# Our player's backpack - starts empty but will fill up as they explore
-inventory = []
 
-def welcome_players():
-    """Greets the player and gets their name for a personalized adventure"""
-    # Friendly welcome messages to set the mood
-    print("Welcome to the Adventure Game!")
+# Player class to store player info and game state
+class Player:
+    # initializer - constructor
+    def __init__(self, name):
+        self.name = name
+        self.inventory = []
+        self.health = 100
+        self.has_map = False
+        self.has_lantern = False
+
+# Function: welcome_player
+
+def welcome_player():
+    # Welcome message and introduction
+    print("Welcome to the Adventure Game!")  
     print('Your journey begins here... ')
-    
-    # Ask for the player's name - we'll use this throughout the game
-    player_name = input("What is your name, adventurer? ")
-    
-    # Greet them personally using two different methods (showing programming options)
-    print("Welcome, " + player_name + "! Your journey begins now.")  # Traditional concatenation
-    print(f"Welcome, {player_name}! Your journey begins now.")      # Modern f-string (cleaner)
-    
-    return player_name  # Send back the name so we can use it later
 
-def directive_auto():
-    """Paints the scene of where the player starts their adventure"""
-    # Multi-line string creates a vivid starting location
-    starting_area = """
-You find yourself in a dark forest
-The sound of rustling leaves fills the air
-A faint path lies ahead, leading deeper into the
-unknown...
-"""
-    print(starting_area)  # Show this atmospheric description
+    # Ask for the player's name
+    name = input("What is your name, adventurer? ")
+    player = Player(name)
 
-def add_to_inventory(item):
-    """Handles adding found items to the player's collection"""
-    # Add the new item to our inventory list
-    inventory.append(item)
-    
-    # Let the player know they successfully picked something up
-    print(f"You picked up: {item}")
+    # Use an f-string to display the same message in a more readable way
+    print(f"Welcome, {player.name}! Your journey begins now.")
 
-# ===== MAIN GAME FLOW =====
+    return player
 
-# Get the player's name and show welcome messages
-player_name = welcome_players()
+# Function: describe_area
+def describe_area():
+    # Describe the starting area
+    print("""
+    You find yourself in a dark forest
+    The sound of rustling leaves fills the air
+    A faint path lies ahead, leading deeper into the
+    unknown... """)
 
-# Set the scene by describing the starting location
-directive_auto()
+# Function: add_to_inventory
+def add_to_inventory(player, item):
+    player.inventory.append(item)
+    print(f"You picked up a {item}!")
 
-# The core game loop - runs continuously until player chooses to quit
+
+# Function to handle the player's choice to stay still
+def stay_still(player):
+    print("You stay still, but the cold saps your energy.")
+    player.health -= 10
+    print(f"Your health is now {player.health}.")
+
+def explore_cave(player):
+    print("You enter a dark cave, the air is damp and stale.")
+    print("You find a treasure chest!")
+    add_to_inventory(player, "treasure")
+    # If player doesn't have a lantern, -10 health
+    if not player.has_lantern:
+        print("It's too dark to see!")
+        player.health -= 10
+        print(f"Your health is now {player.health}.")
+    else:
+        print("You can see the treasure clearly!")
+        # You found rare item add to inventory
+        add_to_inventory(player, "rare gem")
+
+def check_lose(player):
+    return player.health <= 0
+
+def check_win(player):
+    return "treasure" in player.inventory and "rare gem" in player.inventory
+
+
+def explore_hidden_valley(player):
+    print("You discover a hidden valley filled with beautiful flowers.")
+    print("You feel a sense of peace and tranquility.")
+    player.health += 10
+    print(f"Your health is now {player.health}.")
+    add_to_inventory(player, "flower")
+
+
+player = welcome_player()
+describe_area()
+
+
+# Main game loop
 while True:
-    # Present the player with their options at each turn
-    print("\nYou see two paths ahead:")
+    print("\nYou see paths ahead:")
     print("\t1. Take the left path into the dark woods.")
     print("\t2. Take the right path toward the mountain pass.")
-    print("\t3. Check your inventory.")          # New feature - view collected items
-    print("\t4. Stay where you are.")           # Option to pause and observe
-    
-    # Get the player's choice (will be a string "1", "2", etc.)
-    decision = input("What will you do (1,2,3,4): ")
+    print("\t3. Stay where you are.")
+    print("\t4. Explore the hidden valley.")
+    print("\t5. Stay still and listen to the forest.")
+    print("\t6. Explore the nearby cave.")
+    print("\tType 'i' to view your inventory.")
+    print(f"Current Health: {player.health}")
 
-    # Handle each possible choice
+    decision = input("What will you do (1-6 or i): ").lower()
+
+    if decision == 'i':
+        print("Inventory:", player.inventory)
+        continue
+
     if decision == "1":
-        # Left path description and consequence
-        print(f"{player_name}, you step into the dark woods. The trees whisper as you walk deeper.")
-        add_to_inventory("tester")  # Find a "tester" item in the woods
-        
+        print(f"{player.name}, you step into the dark woods. The trees whisper as you walk deeper.")
+        add_to_inventory(player, "lantern")
+        player.has_lantern = True
+
     elif decision == "2":
-        # Right path description and consequence
-        print(f"{player_name}, you make your way towards the mountain pass, feeling the cold wind against your face.")
-        add_to_inventory("may")  # Find a "may" item on the mountain path
+        print(f"{player.name}, you make your way towards the mountain pass, feeling the cold wind against your face.")
+        add_to_inventory(player, "map")
+        player.has_map = True
         
     elif decision == "3":
-        # Show everything the player has collected
-        print("Inventory contents:", inventory)
-        
-    elif decision == "4":
-        # Do nothing option - just environmental description
         print("You stay still, listening to the distant sounds of the forest")
         
-    else:
-        # Handle invalid inputs gracefully
-        print("Invalid choice. Please choose 1, 2, 3, or 4.")
-   
-    # After each action, check if they want to keep playing
-    play_again = input("Do you want to continue exploring? (yes or no): ").lower()
+    elif decision == "4":
+        explore_hidden_valley(player)
+
+    elif decision == "5":
+        stay_still(player)
+        
+    elif decision == "6":
+        explore_cave(player)
+        
+    else: 
+        print("Invalid choice. Please choose 1, 2, 3, 4, 5, 6, or i.")
     
-    # If they say anything other than "yes", end the game
+
+    # Check if the player has won
+    if check_win(player):
+        print(f"Congratulations {player.name}, you have found the treasure and rare gem!")
+        print("You are the winner!")
+        print("You have conquered the forest!")
+        print("You feel a sense of accomplishment.")
+        break # Exit the loop and end the game
+
+    # Check if the player has lost
+    if check_lose(player):
+        print(f"{player.name}, you have lost all your health!")
+        print("Game Over.")
+        break # Exit the loop and end the game
+
+    # Ask if they want to continue
+    play_again = input("Do you want to continue exploring? (yes or no): ").lower()
     if play_again != "yes":
-        print(f"Thanks for playing, {player_name}. See you next time.")
-        break  # Exit the game loop
+        print(f"Thanks for playing, {player.name}. See you next time.")
+        break # Exit the loop and end the game
