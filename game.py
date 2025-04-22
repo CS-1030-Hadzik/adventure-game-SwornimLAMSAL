@@ -35,53 +35,58 @@ def show_inventory(player):
     print("Inventory:", player.inventory)
 
 def check_win(player):
-    if "treasure" in player.inventory and "rare herbs" in player.inventory:
-        print(f"\nCongratulations, {player.name}! You found the treasure and rare herbs.")
-        print("You have completed the adventure successfully.")
-        return True
-    return False
+    return "treasure" in player.inventory and "rare herbs" in player.inventory
 
 def check_lose(player):
-    if player.health <= 0:
-        print(f"\n{player.name}, you have lost all your health.")
-        print("Game Over.")
-        return True
-    return False
+    return player.health <= 0
 
+# Area Functions
 def explore_dark_woods(player):
-    print("You step into the dark woods. The trees whisper as you walk deeper.")
-    add_to_inventory(player, "lantern")
-    player.has_lantern = True
+    print("You step into the dark woods. Shadows stretch between ancient trees.")
+    if not player.has_lantern:
+        add_to_inventory(player, "lantern")
+        player.has_lantern = True
+    else:
+        print("You’ve already explored here and found the lantern.")
 
 def explore_mountain_pass(player):
-    print("You hike through the mountain pass. The cold wind bites at your skin.")
-    add_to_inventory(player, "map")
-    player.has_map = True
-
-def stay_still(player):
-    print("You stay still. The cold drains your energy.")
-    player.health -= 10
-    print(f"Health: {player.health}")
+    print("You ascend the mountain pass. The view is breathtaking.")
+    if not player.has_map:
+        add_to_inventory(player, "map")
+        player.has_map = True
+    else:
+        print("You already found the map here earlier.")
 
 def explore_cave(player):
-    print("You approach a dark cave...")
+    print("You find a narrow cave entrance hidden behind some rocks.")
     if player.has_lantern:
-        print("You light your lantern and carefully explore inside.")
-        add_to_inventory(player, "treasure")
+        print("Using your lantern, you explore the cave.")
+        if "treasure" not in player.inventory:
+            add_to_inventory(player, "treasure")
+        else:
+            print("You've already collected the treasure.")
     else:
-        print("It's too dark to enter safely.")
+        print("It's too dark to explore without a lantern.")
         player.health -= 10
-        print(f"You stumble and hurt yourself. Health: {player.health}")
+        print(f"You stumble and get hurt. Health: {player.health}")
 
 def explore_hidden_valley(player):
-    print("You try to find the hidden valley...")
+    print("You search for a hidden valley said to hold ancient secrets.")
     if player.has_map:
-        print("Using the map, you find a peaceful hidden valley.")
-        add_to_inventory(player, "rare herbs")
+        print("Using your map, you navigate the forest and find the valley.")
+        if "rare herbs" not in player.inventory:
+            add_to_inventory(player, "rare herbs")
+        else:
+            print("You've already picked the rare herbs here.")
     else:
-        print("Without a map, you get lost in the forest.")
+        print("You can’t find the valley without a map.")
         player.health -= 10
-        print(f"You wander for hours. Health: {player.health}")
+        print(f"You get lost and tired. Health: {player.health}")
+
+def stay_still(player):
+    print("You sit quietly, listening to the forest.")
+    player.health -= 10
+    print(f"You feel a bit colder and hungrier. Health: {player.health}")
 
 def main():
     player = welcome_player()
@@ -91,38 +96,39 @@ def main():
         print("\nWhat will you do next?")
         print("1. Explore the dark woods")
         print("2. Explore the mountain pass")
-        print("3. Stay where you are")
+        print("3. Stay still and listen to the forest")
         print("4. Search for a hidden valley")
-        print("5. Stay still and listen to the forest")
-        print("6. Explore a nearby cave")
+        print("5. Explore a nearby cave")
         print("i. Check inventory")
         print(f"Health: {player.health}")
 
-        choice = input("Choose an action (1-6 or i): ").lower()
+        decision = input("Choose an action (1-5 or i): ").lower()
 
-        if choice == "1":
+        if decision == "1":
             explore_dark_woods(player)
-        elif choice == "2":
+        elif decision == "2":
             explore_mountain_pass(player)
-        elif choice == "3":
-            print("You wait and listen to the sounds around you.")
-        elif choice == "4":
-            explore_hidden_valley(player)
-        elif choice == "5":
+        elif decision == "3":
             stay_still(player)
-        elif choice == "6":
+        elif decision == "4":
+            explore_hidden_valley(player)
+        elif decision == "5":
             explore_cave(player)
-        elif choice == "i":
+        elif decision == "i":
             show_inventory(player)
         else:
-            print("Invalid input. Please choose a number from 1 to 6 or 'i'.")
+            print("Invalid choice. Please select a valid option.")
 
-        if check_win(player) or check_lose(player):
+        if check_win(player):
+            print(f"\nCongratulations, {player.name}! You've completed your quest.")
+            break
+        elif check_lose(player):
+            print(f"\n{player.name}, you've lost all your health. Game over.")
             break
 
-        cont = input("Do you want to continue exploring? (yes or no): ").lower()
+        cont = input("Do you want to continue? (yes or no): ").lower()
         if cont != "yes":
-            print(f"Thanks for playing, {player.name}.")
+            print(f"Thanks for playing, {player.name}. Goodbye.")
             break
 
 if __name__ == "__main__":
