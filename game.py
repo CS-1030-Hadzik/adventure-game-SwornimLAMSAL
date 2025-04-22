@@ -4,7 +4,6 @@ Author: Swornim Lamsal
 Version: 1.1
 '''
 
-# Player class
 class Player:
     def __init__(self, name):
         self.name = name
@@ -13,7 +12,6 @@ class Player:
         self.has_map = False
         self.has_lantern = False
 
-# Helper functions
 def add_to_inventory(player, item):
     if item not in player.inventory:
         player.inventory.append(item)
@@ -36,7 +34,6 @@ def check_lose(player):
         return True
     return False
 
-# Area exploration functions
 def explore_dark_woods(player):
     print("You step into the dark woods. The trees whisper as you walk deeper.")
     add_to_inventory(player, "lantern")
@@ -72,7 +69,6 @@ def explore_hidden_valley(player):
         player.health -= 10
         print(f"You wander for hours. Health: {player.health}")
 
-# Welcome and starting area
 def welcome_player():
     print("Welcome to the Adventure Game!")
     name = input("What is your name, adventurer? ")
@@ -87,7 +83,6 @@ The sound of rustling leaves surrounds you.
 Paths lead in several directions...
 """)
 
-# Main game
 def main():
     player = welcome_player()
     describe_area()
