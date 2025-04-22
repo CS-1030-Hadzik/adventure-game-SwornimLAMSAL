@@ -7,10 +7,24 @@ Version: 1.1
 class Player:
     def __init__(self, name):
         self.name = name
-        self.health = 100
         self.inventory = []
+        self.health = 100
         self.has_map = False
         self.has_lantern = False
+
+def welcome_player():
+    print("Welcome to the Adventure Game!")
+    name = input("What is your name, adventurer? ")
+    player = Player(name)
+    print(f"Welcome, {player.name}! Your journey begins now.")
+    return player
+
+def describe_area():
+    print("""
+You find yourself in a mysterious forest.
+The sound of rustling leaves surrounds you.
+Paths lead in several directions...
+""")
 
 def add_to_inventory(player, item):
     if item not in player.inventory:
@@ -68,20 +82,6 @@ def explore_hidden_valley(player):
         print("Without a map, you get lost in the forest.")
         player.health -= 10
         print(f"You wander for hours. Health: {player.health}")
-
-def welcome_player():
-    print("Welcome to the Adventure Game!")
-    name = input("What is your name, adventurer? ")
-    player = Player(name)
-    print(f"Welcome, {player.name}! Your journey begins now.")
-    return player
-
-def describe_area():
-    print("""
-You find yourself in a mysterious forest.
-The sound of rustling leaves surrounds you.
-Paths lead in several directions...
-""")
 
 def main():
     player = welcome_player()
