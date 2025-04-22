@@ -1,9 +1,8 @@
 '''
-Adventure Game – conditionals
+Adventure Game – Final Version
 Author: Swornim Lamsal
 Version: 1.1
-
-
+'''
 
 # Player class
 class Player:
