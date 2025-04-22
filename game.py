@@ -1,7 +1,7 @@
 '''
 Adventure Game – Final Version
 Author: Swornim Lamsal
-Version: 1.1
+Version: 1.2
 '''
 
 class Player:
